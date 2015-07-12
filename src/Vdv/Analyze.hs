@@ -11,7 +11,7 @@ newtype TagName = TagName Text
 
 newtype Journey = Journey Element
 
-prettyPrintDataMessage :: DataMessage -> DataMessage
+prettyPrintDataMessage :: DataMessage -> Text
 prettyPrintDataMessage = error "prettyPrintDataMessage not implemented"
 
 readLogfile :: MonadIO m => FilePath -> m Logfile
@@ -50,4 +50,6 @@ data Settings = Settings {
   } deriving(Show,Eq)
 
 main :: IO ()
-main = return ()
+main = do
+  logFile <- readLogFile "data/test.xml
+  return ()
