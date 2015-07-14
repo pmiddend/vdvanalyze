@@ -69,7 +69,7 @@ filterJourneySingle j f = has (journeyElement . entire . ell (f ^. filterTagName
 
 prettyPrintJourney :: Journey -> Text
 prettyPrintJourney j =
-  (j ^. journeyZst) <> "\n" <> TL.toStrict (renderText (def { rsPretty = True } ) (j ^. journeyElement . to elementToBareDocument))
+  (j ^. journeyZst) <> "\n" <> TL.toStrict (renderText (def { rsPretty = False } ) (j ^. journeyElement . to elementToBareDocument))
 
 main :: IO ()
 main = do
