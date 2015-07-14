@@ -1,0 +1,147 @@
+foo
+<DatenAbrufenAntwort>
+  <Bestaetigung Zst="2015-06-28T13:10:27+02:00" Ergebnis="ok" Fehlernummer="0">
+    <Fehlertext></Fehlertext>
+  </Bestaetigung>
+  <WeitereDaten>false</WeitereDaten>
+  <AUSNachricht AboID="1">
+    <IstFahrt>
+      <LinienID>84</LinienID>
+      <RichtungsID>1</RichtungsID>
+      <FahrtRef>
+        <FahrtID>
+          <FahrtBezeichner>fahrt1337</FahrtBezeichner>
+          <Betriebstag>2015-06-28</Betriebstag>
+        </FahrtID>
+        <FahrtStartEnde>
+          <StartHaltID>1337</StartHaltID>
+          <Startzeit>2015-06-28T13:02:00+02:00</Startzeit>
+          <EndHaltID>1338</EndHaltID>
+          <Endzeit>2015-06-28T13:23:00+02:00</Endzeit>
+        </FahrtStartEnde>
+      </FahrtRef>
+      <Komplettfahrt>false</Komplettfahrt>
+      <IstHalt>
+        <HaltID>1337</HaltID>
+        <Abfahrtszeit>2015-06-28T13:07:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:07:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:10:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:09:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <IstHalt>
+        <HaltID>1338</HaltID>
+        <Abfahrtszeit>2015-06-28T13:10:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:10:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:11:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:11:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <LinienText>84</LinienText>
+      <ProduktID>Bus</ProduktID>
+      <RichtungsText>Richtung</RichtungsText>
+      <VerkehrsmittelText>Bus </VerkehrsmittelText>
+      <PrognoseMoeglich>true</PrognoseMoeglich>
+    </IstFahrt>
+    <IstFahrt>
+      <LinienID>241</LinienID>
+      <RichtungsID>2</RichtungsID>
+      <FahrtRef>
+        <FahrtID>
+          <FahrtBezeichner>fahrt1338</FahrtBezeichner>
+          <Betriebstag>2015-06-28</Betriebstag>
+        </FahrtID>
+        <FahrtStartEnde>
+          <StartHaltID>ersterhalt</StartHaltID>
+          <Startzeit>2015-06-28T12:45:00+02:00</Startzeit>
+          <EndHaltID>letzterhalt</EndHaltID>
+          <Endzeit>2015-06-28T13:22:00+02:00</Endzeit>
+        </FahrtStartEnde>
+      </FahrtRef>
+      <Komplettfahrt>false</Komplettfahrt>
+      <IstHalt>
+        <HaltID>first</HaltID>
+        <Abfahrtszeit>2015-06-28T13:09:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:09:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:10:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:10:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <IstHalt>
+        <HaltID>third</HaltID>
+        <Abfahrtszeit>2015-06-28T13:10:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:10:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:10:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:10:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <LinienText>241</LinienText>
+      <ProduktID>Bus</ProduktID>
+      <RichtungsText>Andere Richtung</RichtungsText>
+      <VerkehrsmittelText>Bus </VerkehrsmittelText>
+      <PrognoseMoeglich>true</PrognoseMoeglich>
+    </IstFahrt>
+    <IstFahrt>
+      <LinienID>85</LinienID>
+      <RichtungsID>1</RichtungsID>
+      <FahrtRef>
+        <FahrtID>
+          <FahrtBezeichner>weiterefahrt</FahrtBezeichner>
+          <Betriebstag>2015-06-28</Betriebstag>
+        </FahrtID>
+        <FahrtStartEnde>
+          <StartHaltID>wiederersterhalt</StartHaltID>
+          <Startzeit>2015-06-28T12:35:00+02:00</Startzeit>
+          <EndHaltID>wiederletzterhalt</EndHaltID>
+          <Endzeit>2015-06-28T13:23:00+02:00</Endzeit>
+        </FahrtStartEnde>
+      </FahrtRef>
+      <Komplettfahrt>false</Komplettfahrt>
+      <IstHalt>
+        <HaltID>hehe</HaltID>
+        <Abfahrtszeit>2015-06-28T13:09:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:09:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:10:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:10:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <IstHalt>
+        <HaltID>hoho</HaltID>
+        <Abfahrtszeit>2015-06-28T13:10:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:10:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:10:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:10:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <LinienText>85</LinienText>
+      <ProduktID>Bus</ProduktID>
+      <RichtungsText>ein bahnhof</RichtungsText>
+      <VerkehrsmittelText>Bus </VerkehrsmittelText>
+      <PrognoseMoeglich>true</PrognoseMoeglich>
+    </IstFahrt>
+    <IstFahrt>
+      <LinienID>408</LinienID>
+      <RichtungsID>2</RichtungsID>
+      <FahrtRef>
+        <FahrtID>
+          <FahrtBezeichner>letztefahrt</FahrtBezeichner>
+          <Betriebstag>2015-06-28</Betriebstag>
+        </FahrtID>
+        <FahrtStartEnde>
+          <StartHaltID>puh</StartHaltID>
+          <Startzeit>2015-06-28T12:27:00+02:00</Startzeit>
+          <EndHaltID>baldfertig</EndHaltID>
+          <Endzeit>2015-06-28T13:15:00+02:00</Endzeit>
+        </FahrtStartEnde>
+      </FahrtRef>
+      <Komplettfahrt>false</Komplettfahrt>
+      <IstHalt>
+        <HaltID>einzigerhalt</HaltID>
+        <Abfahrtszeit>2015-06-28T13:10:00+02:00</Abfahrtszeit>
+        <Ankunftszeit>2015-06-28T13:10:00+02:00</Ankunftszeit>
+        <IstAbfahrtPrognose>2015-06-28T13:13:00+02:00</IstAbfahrtPrognose>
+        <IstAnkunftPrognose>2015-06-28T13:13:00+02:00</IstAnkunftPrognose>
+      </IstHalt>
+      <LinienText>408</LinienText>
+      <ProduktID>Bus</ProduktID>
+      <RichtungsText>weitere richtung</RichtungsText>
+      <VerkehrsmittelText>Bus </VerkehrsmittelText>
+      <PrognoseMoeglich>true</PrognoseMoeglich>
+    </IstFahrt>
+  </AUSNachricht>
+</DatenAbrufenAntwort>
+bar
