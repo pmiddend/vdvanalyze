@@ -35,6 +35,7 @@ executable analyze
                      , xml-lens
                      , xml-conduit
                      , data-default
+                     , attoparsec
   -- hs-source-dirs:      
   default-language:    Haskell2010
   ghc-options: -Wall
