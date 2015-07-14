@@ -6,6 +6,7 @@ import System.FilePath
 import Options.Applicative(strOption,long,help,option,(<>),Parser,execParser,helper,fullDesc,progDesc,header,info,switch,eitherReader,ReadM)
 import Control.Lens(makeLenses)
 import Vdv.Filter
+import Vdv.Exclusions
 import Vdv.FilterOperator
 import Vdv.Service
 import qualified Data.Attoparsec.Text as AP
@@ -15,6 +16,7 @@ data Settings = Settings {
   , _settingsFilters :: [Filter]
   , _settingsService :: Service
   , _settingsInvert :: Bool
+  , _settingsExclusions :: Exclusions
   } deriving(Show,Eq)
 
 $(makeLenses ''Settings)
@@ -46,6 +48,7 @@ parseSettings' = Settings
                 <*> option filtersOpt (long "filters" <> help "Menge von Filtern, Format <tag>[=~]<wert>")
                 <*> option serviceOpt (long "service" <> help "Dienst (AUS/DFI/...)")
                 <*> switch (long "invert" <> help "Outputfahrten umdrehen")
+                <*> (option exclusionsOpt (long "exclusions" <> help "Welche Tags bei der Ausgabe weggetan werden sollen (kommaseparierte Liste von Pfaden, mit / getrennt)") <|> pure mempty)
 
 parseSettings :: MonadIO m => m Settings
 parseSettings = liftIO (execParser opts)

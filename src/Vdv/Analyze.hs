@@ -1,9 +1,9 @@
 {-# LANGUAGE RankNTypes #-}
 module Main where
 
-import Text.XML.Lens(attr,el,root,entire,text,ell,(./))
+import Text.XML.Lens(attr,el,root,entire,text,ell,(./),localName,nodes,_Element,Node,Element)
 import ClassyPrelude hiding (Element,FilePath)
-import Control.Lens(iso,(^.),from,(^?!),(^..),Traversal',view,to,has,filtered)
+import Control.Lens(iso,(^.),from,(^?!),(^..),Traversal',view,to,has,filtered,(^?),(%~),(&),_head,plate)
 import System.FilePath
 import Data.List(unfoldr)
 import qualified Data.ByteString as BIO
@@ -15,6 +15,7 @@ import Vdv.Logfile
 import Vdv.DataMessage
 import Vdv.FilterOperator
 import Vdv.XML
+import Vdv.Exclusions
 import Vdv.Text
 import Vdv.Settings
 import Vdv.Filter
@@ -69,11 +70,31 @@ filterJourneySingle j f = has (journeyElement . entire . ell (f ^. filterTagName
 
 prettyPrintJourney :: Journey -> Text
 prettyPrintJourney j =
-  (j ^. journeyZst) <> "\n" <> TL.toStrict (renderText (def { rsPretty = False } ) (j ^. journeyElement . to elementToBareDocument))
+  (j ^. journeyZst) <> "\n" <> TL.toStrict (renderText (def { rsPretty = True } ) (j ^. journeyElement . to elementToBareDocument))
 
+elementPathTraversal :: ElementPath -> Traversal' Element Element
+elementPathTraversal path = helper (path ^. pathElements)
+  where
+    helper [] = id
+    helper (t:ts) = ell t ./ helper ts
+
+runExclusions :: Exclusions -> Journey -> Journey
+runExclusions exclusions journey = undefined{-journey & journeyElement . plate %~ f
+  where f :: [Node] -> [Node]
+        f ns = filter (\n -> (fromMaybe "" (n ^? _Element . localName)) `onotElem` exclusions) ns-}
+
+-- Debug function
+readFirstJourney :: (MonadIO m,Functor m) => FilePath -> m Element 
+readFirstJourney fp = do
+  f <- readLogfile fp
+  let
+    journeys :: [Journey]
+    journeys = extractDataMessages f >>= extractJourneys ServiceAUS
+  return (journeys ^?! _head . journeyElement)
+  
 main :: IO ()
 main = do
   settings <- parseSettings
   logfile <- readLogfile (settings ^. settingsInputFile)
-  let filteredJourneys = filter (filterJourney (settings ^. settingsFilters)) (extractDataMessages logfile >>= (extractJourneys (settings ^. settingsService)))
+  let filteredJourneys = runExclusions (settings ^. settingsExclusions) <$> (filter (filterJourney (settings ^. settingsFilters)) (extractDataMessages logfile >>= (extractJourneys (settings ^. settingsService))))
   mapM_ (putStrLn . prettyPrintJourney) ((if settings ^. settingsInvert then reverse else id) filteredJourneys)
