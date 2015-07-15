@@ -6,6 +6,11 @@ import Control.Lens(makePrisms)
 
 data FilterOperator = FilterOperatorEq
                     | FilterOperatorLike
+                    | FilterOperatorLe
+                    | FilterOperatorGe
+                    | FilterOperatorDateLe
+                    | FilterOperatorDateGe
+                    | FilterOperatorDateEq
                     deriving(Show,Eq)
 
 $(makePrisms ''FilterOperator)

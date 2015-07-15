@@ -1,7 +1,11 @@
-module Vdv.Text(extractDelimited) where
+module Vdv.Text(extractDelimited,readUnsafeInt) where
 
 import ClassyPrelude
 import Data.Text(breakOn)
+import Data.Text.Read(decimal)
+
+readUnsafeInt :: Text -> Int
+readUnsafeInt x = either (error $ "invalid decimal \"" <> unpack x <> "\"") fst (decimal x)
 
 data BreakMode = BreakWithDelimiter
                | BreakWithoutDelimiter
