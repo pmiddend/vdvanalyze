@@ -15,9 +15,9 @@ serviceContainer :: Service -> Text
 serviceContainer ServiceAUS = "AUSNachricht"
 serviceContainer ServiceDFI = "AZBNachricht"
 
-journeyContainer :: Service -> Text
-journeyContainer ServiceAUS = "IstFahrt"
-journeyContainer ServiceDFI = "AZBFahrplanLage"
+journeyContainer :: Service -> [Text]
+journeyContainer ServiceAUS = ["IstFahrt"]
+journeyContainer ServiceDFI = ["AZBFahrplanLage","AZBFahrtLoeschen"]
 
 parseService :: String -> Either String Service
 parseService "AUS" = Right ServiceAUS

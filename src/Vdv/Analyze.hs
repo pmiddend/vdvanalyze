@@ -1,7 +1,7 @@
 {-# LANGUAGE RankNTypes #-}
 module Main where
 
-import Text.XML.Lens(attr,el,root,entire,text,ell,(./),localName,nodes,_Element,Element)
+import Text.XML.Lens(attr,el,root,entire,text,ell,(./),localName,nodes,_Element,Element,nameLocalName,elementName)
 import ClassyPrelude hiding (Element,FilePath)
 import Control.Lens(only,iso,(^.),from,(^?!),(^..),Traversal',view,to,has,filtered,(%~),(&),_head,plate)
 import System.FilePath
@@ -22,6 +22,7 @@ import Vdv.Settings
 import Vdv.Filter
 import Vdv.Service
 import Vdv.Journey
+import qualified Data.CaseInsensitive as CI
 
 -- Some global constants
 daaTag :: Text
@@ -51,8 +52,14 @@ extractJourneys service dm =
   in
     dm ^.. extractJourneysLens service zst
 
+namedOf :: [CI.CI Text] -> Traversal' Element Element
+namedOf ns f s
+    | CI.mk (nameLocalName (elementName s)) `elem` ns = f s
+    | otherwise = pure s
+
+--extractJourneysLens :: Service -> Text -> Traversal' DataMessage Journey
 extractJourneysLens :: Service -> Text -> Traversal' DataMessage Journey
-extractJourneysLens service zst = dataMessageDoc . root . ell daaTag ./ ell (serviceContainer service) ./ ell (journeyContainer service) . (iso (\j -> Journey{_journeyElement=j,_journeyZst=zst}) (view journeyElement))
+extractJourneysLens service zst = dataMessageDoc . root . ell daaTag ./ ell (serviceContainer service) ./ namedOf (CI.mk <$> (journeyContainer service)) . (iso (\j -> Journey{_journeyElement=j,_journeyZst=zst}) (view journeyElement))
 
 extractZst :: Traversal' DataMessage Text
 extractZst = dataMessageDoc . root . entire . el "Bestaetigung" . attr "Zst"

@@ -28,6 +28,7 @@ executable analyze
                      , optparse-applicative
                      , lens
                      , time
+                     , case-insensitive
                      , mtl
                      , text
                      , bytestring
