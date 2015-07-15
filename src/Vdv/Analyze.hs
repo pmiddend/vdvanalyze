@@ -94,6 +94,19 @@ filterJourneySingle j f =
         evalFilterOp FilterOperatorDateEq expected actual = actual `dateTextEq` expected
         --evalFilterOp _ _ _ = error "Invalid filter"
 
+prettyPrintJourneyCondensed :: Journey -> Text
+prettyPrintJourneyCondensed j = (j ^. journeyZst) <> "\n" <> intercalate "\n" (j ^.. journeyElement . plate . ell "IstHalt" . to formatIstHalt)
+  where formatIstHalt halt = haltid <> " " <> (ftime ankunft) <> " " <> (ftime abfahrt) <> " " <> (ftime ankunftProg) <> " " <> (ftime abfahrtProg)
+          where haltid = padLeft 10 (halt ^. plate . ell "HaltID" . text)
+                padLeft len x = if length x < len then replicate (len - length x) ' ' <> x else x
+                ftime = take 5 . drop 11
+                orDash "" = replicate 30 '-'
+                orDash x = x
+                ankunft = orDash (halt ^. plate . ell "Ankunftszeit" . text)
+                abfahrt = orDash (halt ^. plate . ell "Abfahrtszeit" . text)
+                ankunftProg = orDash (halt ^. plate . ell "IstAbfahrtPrognose" . text)
+                abfahrtProg = orDash (halt ^. plate . ell "IstAnkunftPrognose" . text)
+
 prettyPrintJourney :: Journey -> Text
 prettyPrintJourney j =
   (j ^. journeyZst) <> "\n" <> TL.toStrict (renderText (def { rsPretty = True } ) (j ^. journeyElement . to elementToBareDocument))
@@ -117,10 +130,16 @@ readFirstJourney fp = do
     journeys :: [Journey]
     journeys = extractDataMessages f >>= extractJourneys ServiceAUS
   return (journeys ^?! _head . journeyElement)
+
+prettyPrinter :: Settings -> (Journey -> Text)
+prettyPrinter s =
+  if s ^. settingsCondenseOutput
+  then prettyPrintJourneyCondensed
+  else prettyPrintJourney
   
 main :: IO ()
 main = do
   settings <- parseSettings
   logfile <- readLogfile (settings ^. settingsInputFile)
   let filteredJourneys = runExclusions (settings ^. settingsExclusions) <$> filter (filterJourney (settings ^. settingsFilters)) (extractDataMessages logfile >>= extractJourneys (settings ^. settingsService))
-  mapM_ (putStrLn . prettyPrintJourney) ((if settings ^. settingsInvert then reverse else id) filteredJourneys)
+  mapM_ (putStrLn . prettyPrinter settings) ((if settings ^. settingsInvert then reverse else id) filteredJourneys)

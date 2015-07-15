@@ -14,6 +14,7 @@ data Settings = Settings {
   , _settingsFilters :: [Filter]
   , _settingsService :: Service
   , _settingsInvert :: Bool
+  , _settingsCondenseOutput :: Bool
   , _settingsExclusions :: Exclusions
   } deriving(Show,Eq)
 
@@ -25,6 +26,7 @@ parseSettings' = Settings
                 <*> (option filtersOpt (long "filters" <> help "Kommaserparierte Liste von Filtern, Format <pfad>[=~]<wert> ist hierbei ein Pfad tagname1/tagname2/...") <|> pure mempty)
                 <*> option serviceOpt (long "service" <> help "Dienst (AUS/DFI/...)")
                 <*> switch (long "invert" <> help "Outputfahrten umdrehen")
+                <*> switch (long "condense" <> help "Nur Halte mit Zeiten ausgeben (nur für AUS interessant)")
                 <*> (option exclusionsOpt (long "exclusions" <> help "Welche Tags bei der Ausgabe weggetan werden sollen (kommaseparierte Liste von Pfaden a la <pfad> ist hierbei ein Pfad tagname1/tagname2/...)") <|> pure mempty)
 
 parseSettings :: MonadIO m => m Settings
