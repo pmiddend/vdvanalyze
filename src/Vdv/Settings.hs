@@ -3,13 +3,11 @@ module Vdv.Settings where
 
 import ClassyPrelude hiding(FilePath,(<>))
 import System.FilePath
-import Options.Applicative(strOption,long,help,option,(<>),Parser,execParser,helper,fullDesc,progDesc,header,info,switch,eitherReader,ReadM)
+import Options.Applicative(strOption,long,help,option,(<>),Parser,execParser,helper,fullDesc,progDesc,header,info,switch)
 import Control.Lens(makeLenses)
 import Vdv.Filter
 import Vdv.Exclusions
-import Vdv.FilterOperator
 import Vdv.Service
-import qualified Data.Attoparsec.Text as AP
 
 data Settings = Settings {
     _settingsInputFile :: FilePath
@@ -20,27 +18,6 @@ data Settings = Settings {
   } deriving(Show,Eq)
 
 $(makeLenses ''Settings)
-
-filterParser :: AP.Parser [Filter]
-filterParser = singleFilter  `AP.sepBy` (AP.char ',')
-  where parseOperator '=' = FilterOperatorEq
-        parseOperator '~' = FilterOperatorLike
-        parseOperator o = error $ "Invalid operator " <> show o
-        singleFilter = Filter <$> (pack <$> (AP.many1 (AP.satisfy (AP.notInClass "=~")))) <*> (parseOperator <$> AP.anyChar) <*> (pack <$> (AP.many1 (AP.notChar ',')))
-
-parseFilters :: Text -> Either String [Filter]
-parseFilters t = AP.parseOnly filterParser t
-
-parseService :: String -> Either String Service
-parseService "AUS" = Right ServiceAUS
-parseService "DFI" = Right ServiceDFI
-parseService s = Left ("Invalid service " <> s)
-
-filtersOpt :: ReadM [Filter]
-filtersOpt = eitherReader (parseFilters . pack)
-
-serviceOpt :: ReadM Service
-serviceOpt = eitherReader parseService
 
 parseSettings' :: Parser Settings
 parseSettings' = Settings
