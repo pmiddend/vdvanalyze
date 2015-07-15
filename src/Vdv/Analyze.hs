@@ -71,7 +71,7 @@ filterJourney :: [Filter] -> Journey -> Bool
 filterJourney fs j = and (filterJourneySingle j <$> fs)
 
 filterJourneySingle :: Journey -> Filter -> Bool
-filterJourneySingle j f = has (journeyElement . entire . ell (f ^. filterTagName) . text . filtered (evalFilterOp (f ^. filterOperator) (f ^. filterTagValue))) j
+filterJourneySingle j f = has (journeyElement . elementPathTraversal (f ^. filterTagPath) . text . filtered (evalFilterOp (f ^. filterOperator) (f ^. filterTagValue))) j
   where evalFilterOp FilterOperatorEq expected actual = expected == actual
         evalFilterOp FilterOperatorLike expected actual = expected `isInfixOf` actual
         --evalFilterOp _ _ _ = error "Invalid filter"
@@ -81,18 +81,13 @@ prettyPrintJourney j =
   (j ^. journeyZst) <> "\n" <> TL.toStrict (renderText (def { rsPretty = True } ) (j ^. journeyElement . to elementToBareDocument))
 
 elementPathTraversal :: ElementPath -> Traversal' Element Element
-elementPathTraversal path = helper (path ^. pathElements)
-  where
-    helper [] = id
-    helper (t:ts) = ell t ./ helper ts
+elementPathTraversal = foldrElementPath (\e p -> plate . ell e . p) id
 
 runExclusions :: Exclusions -> Journey -> Journey
 runExclusions exclusions journey = foldrExclusion runExclusion journey exclusions
   where
-    runElementPath :: ElementPath -> Traversal' Element Element
-    runElementPath exclusionPath = foldrElementPath (\e p -> plate . ell e . p) id (pathInitUnsafe exclusionPath)
     runExclusion :: ElementPath -> Journey -> Journey
-    runExclusion exclusionPath previousJourney = previousJourney & journeyElement . (runElementPath exclusionPath) . nodes %~ filterNodes (pathLastUnsafe exclusionPath)
+    runExclusion exclusionPath previousJourney = previousJourney & journeyElement . (elementPathTraversal . pathInitUnsafe $ exclusionPath) . nodes %~ filterNodes (pathLastUnsafe exclusionPath)
     filterNodes name = filter (filterByName name)
     filterByName name = not . has (_Element . localName . only name)
 
