@@ -45,7 +45,7 @@ serviceOpt = eitherReader parseService
 parseSettings' :: Parser Settings
 parseSettings' = Settings
                 <$> strOption (long "input-file" <> help "Logdatei zum Einlesen")
-                <*> option filtersOpt (long "filters" <> help "Menge von Filtern, Format <tag>[=~]<wert>")
+                <*> (option filtersOpt (long "filters" <> help "Menge von Filtern, Format <tag>[=~]<wert>") <|> pure mempty)
                 <*> option serviceOpt (long "service" <> help "Dienst (AUS/DFI/...)")
                 <*> switch (long "invert" <> help "Outputfahrten umdrehen")
                 <*> (option exclusionsOpt (long "exclusions" <> help "Welche Tags bei der Ausgabe weggetan werden sollen (kommaseparierte Liste von Pfaden, mit / getrennt)") <|> pure mempty)

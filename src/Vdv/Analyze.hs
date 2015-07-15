@@ -1,9 +1,9 @@
 {-# LANGUAGE RankNTypes #-}
 module Main where
 
-import Text.XML.Lens(attr,el,root,entire,text,ell,(./),localName,nodes,_Element,Node,Element)
+import Text.XML.Lens(attr,el,root,entire,text,ell,(./),localName,nodes,_Element,Element)
 import ClassyPrelude hiding (Element,FilePath)
-import Control.Lens(iso,(^.),from,(^?!),(^..),Traversal',view,to,has,filtered,(^?),(%~),(&),_head,plate)
+import Control.Lens(only,iso,(^.),from,(^?!),(^..),Traversal',view,to,has,filtered,(%~),(&),_head,plate)
 import System.FilePath
 import Data.List(unfoldr)
 import qualified Data.ByteString as BIO
@@ -15,6 +15,7 @@ import Vdv.Logfile
 import Vdv.DataMessage
 import Vdv.FilterOperator
 import Vdv.XML
+import Vdv.ElementPath
 import Vdv.Exclusions
 import Vdv.Text
 import Vdv.Settings
@@ -79,9 +80,14 @@ elementPathTraversal path = helper (path ^. pathElements)
     helper (t:ts) = ell t ./ helper ts
 
 runExclusions :: Exclusions -> Journey -> Journey
-runExclusions exclusions journey = undefined{-journey & journeyElement . plate %~ f
-  where f :: [Node] -> [Node]
-        f ns = filter (\n -> (fromMaybe "" (n ^? _Element . localName)) `onotElem` exclusions) ns-}
+runExclusions exclusions journey = foldrExclusion runExclusion journey exclusions
+  where
+    runElementPath :: ElementPath -> Traversal' Element Element
+    runElementPath exclusionPath = foldrElementPath (\e p -> plate . ell e . p) id (pathInitUnsafe exclusionPath)
+    runExclusion :: ElementPath -> Journey -> Journey
+    runExclusion exclusionPath previousJourney = previousJourney & journeyElement . (runElementPath exclusionPath) . nodes %~ filterNodes (pathLastUnsafe exclusionPath)
+    filterNodes name = filter (filterByName name)
+    filterByName name = not . has (_Element . localName . only name)
 
 -- Debug function
 readFirstJourney :: (MonadIO m,Functor m) => FilePath -> m Element 

@@ -1,23 +1,20 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module Vdv.Exclusions(exclusionsOpt,Exclusions,ElementPath,pathElements) where
+{-# LANGUAGE TypeFamilies #-}
+module Vdv.Exclusions(exclusionsOpt,Exclusions,ElementPath,foldrExclusion,parseExclusions) where
 
 import ClassyPrelude
 import qualified Data.Attoparsec.Text as AP
 import Options.Applicative(eitherReader,ReadM)
-import Control.Lens(Iso',iso)
-
-newtype ElementPath = ElementPath [Text] deriving(Show,Eq,Read)
+import Vdv.Attoparsec
+import Vdv.ElementPath
 
 newtype Exclusions = Exclusions [ElementPath] deriving(Show,Eq,Read,Monoid)
 
-pathElements :: Iso' ElementPath [Text]
-pathElements = iso (\(ElementPath p) -> p) ElementPath
-
-manyNotChars :: String -> AP.Parser Text
-manyNotChars cs = pack <$> (AP.many1 (AP.satisfy (AP.notInClass cs)))
+foldrExclusion :: (ElementPath -> b -> b) -> b -> Exclusions -> b
+foldrExclusion f i (Exclusions es) = foldr f i es
 
 parseElementPath :: AP.Parser ElementPath
-parseElementPath = ElementPath <$> (manyNotChars "/," `AP.sepBy` (AP.char '/'))
+parseElementPath = pathFromParts <$> (manyNotChars "/," `AP.sepBy` (AP.char '/'))
 
 parseExclusions :: Text -> Either String Exclusions
 parseExclusions t = AP.parseOnly (Exclusions <$> (parseElementPath `AP.sepBy` (AP.char ','))) t
