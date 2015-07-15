@@ -81,7 +81,10 @@ dateTextEq :: Text -> Text -> Bool
 dateTextEq = isoDateOp (>=)
 
 filterJourneySingle :: Journey -> Filter -> Bool
-filterJourneySingle j f = has (journeyElement . elementPathTraversal (f ^. filterTagPath) . text . filtered (evalFilterOp (f ^. filterOperator) (f ^. filterTagValue))) j
+filterJourneySingle j f =
+  if has (filterTagPath . pathElements . _head . only "$Zst") f
+    then evalFilterOp (f ^. filterOperator) (f ^. filterTagValue) (j ^. journeyZst)
+    else has (journeyElement . elementPathTraversal (f ^. filterTagPath) . text . filtered (evalFilterOp (f ^. filterOperator) (f ^. filterTagValue))) j
   where evalFilterOp FilterOperatorEq expected actual = expected == actual
         evalFilterOp FilterOperatorLike expected actual = expected `isInfixOf` actual
         evalFilterOp FilterOperatorGe expected actual = readUnsafeInt expected <= readUnsafeInt actual
